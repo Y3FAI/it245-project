@@ -29,12 +29,12 @@
           String line = br.readLine();
           while (line != null) {
               if (line.trim().length() > 0) {
-                  String[] p = line.split(",");
-
-                          Integer.parseInt(p[4]),
-                          Double.parseDouble(p[5]),
-                          Double.parseDouble(p[6]));
-                  rows.add(s);
+                String[] p = line.split(",");
+                Station s = new Station(p[0], p[1], p[2], p[3],
+                        Integer.parseInt(p[4]),
+                        Double.parseDouble(p[5]),
+                        Double.parseDouble(p[6]));
+                rows.add(s);
                   // an interchange station appears on more than one line but shares
                   // the same code, so we only keep one Station per code
                   if (!stations.containsKey(s.code)) {
