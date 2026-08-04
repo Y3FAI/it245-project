@@ -84,6 +84,14 @@ public class MetroGraph {
                 adj.get(b.code).add(new Edge(a.code, d));
             }
         }
+
+        // warn if a station got no connections (wrong line name in the data)
+        for (String code : stations.keySet()) {
+            if (adj.get(code).size() == 0) {
+                System.out.println("Warning: station " + code + " ("
+                        + stations.get(code).line + ") has no connections.");
+            }
+        }
     }
 
     public boolean hasCode(String code) {
