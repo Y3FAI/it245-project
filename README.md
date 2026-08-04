@@ -1,7 +1,14 @@
 # Riyadh Metro Route Planner
 
-A Java program that finds a route between two Riyadh Metro stations. It finds the route in
-two ways and compares them.
+A Java program that finds a route between two Riyadh Metro stations. It finds the route in two ways and compares them.
+
+Solution A is Breadth-First Search. It uses a Queue and it finds the route with the fewest stops.
+
+Solution B is Dijkstra's algorithm. It uses a HashMap distance table and it finds the route with the shortest distance in km.
+
+Both of them search the same graph, which holds the 83 stations of the 6 metro lines and the connections between them.
+
+---
 
 ## Data structures and algorithms
 
