@@ -86,6 +86,10 @@ public class MetroGraph {
         }
     }
 
+    public boolean hasCode(String code) {
+        return stations.containsKey(code);
+    }
+
     // Straight-line distance in km between two stations, worked out from their
     // coordinates. One degree is about 111 km.
     double distance(Station a, Station b) {
