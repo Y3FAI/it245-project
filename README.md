@@ -18,14 +18,8 @@ the connections between them.
 javac -d out src/*.java
 ```
 
-If javac is not found, add Java to the path first:
-
-```
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
-```
-
-Run the program from the top folder of the project, because it reads
-`data/stations.csv`.
+You need a JDK installed (Java 8 or newer). Run the program from the top folder of the
+project, because it needs to reads `data/stations.csv`.
 
 ## Run it
 
