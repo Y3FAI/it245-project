@@ -17,8 +17,7 @@ the connections between them.
 ```
 javac -d out src/*.java
 ```
-
-You need a JDK installed (Java 8 or newer). Run the program from the top folder of the
+Run the program from the top folder of the
 project, because it needs to reads `data/stations.csv`.
 
 ## Run it
