@@ -91,10 +91,12 @@ public class MetroGraph {
     }
 
     // Straight-line distance in km between two stations, worked out from their
-    // coordinates. One degree is about 111 km.
+    // coordinates. One degree of latitude is about 111 km, but a degree of
+    // longitude is shorter here, so we scale it by cos(latitude).
     double distance(Station a, Station b) {
+        double midLat = Math.toRadians((a.lat + b.lat) / 2.0);
         double dLat = b.lat - a.lat;
-        double dLon = b.lon - a.lon;
+        double dLon = (b.lon - a.lon) * Math.cos(midLat);
         return Math.sqrt(dLat * dLat + dLon * dLon) * 111.0;
     }
 }
