@@ -93,18 +93,4 @@ public class MetroGraph {
         double dLon = b.lon - a.lon;
         return Math.sqrt(dLat * dLat + dLon * dLon) * 111.0;
     }
-
-    // TEMPORARY quick check that the edges are there. This is removed once the
-    // real Main class is added later this week.
-    public static void main(String[] args) throws Exception {
-        MetroGraph g = new MetroGraph();
-        g.load("data/stations.csv");
-        System.out.println("Loaded " + g.stations.size() + " stations.");
-        System.out.println("S03 " + g.stations.get("S03").name + " is joined to:");
-        for (int i = 0; i < g.adj.get("S03").size(); i++) {
-            Edge e = g.adj.get("S03").get(i);
-            System.out.println("   " + e.to + " " + g.stations.get(e.to).name
-                    + "  " + Math.round(e.distance * 100) / 100.0 + " km");
-        }
-    }
 }
