@@ -28,6 +28,9 @@ public class Main {
         } else if (isCommand(command, "stations")) {
             showStations();
 
+        } else if (isCommand(command, "test")) {
+            runTests();
+
         } else {
             System.out.println("I do not know this command: " + command);
             showUsage();
@@ -36,7 +39,7 @@ public class Main {
 
     // The commands, in one short line. README.md explains them.
     static void showUsage() {
-        System.out.println("Commands:  path <from> <to>  |  -stations");
+        System.out.println("Commands:  path <from> <to>  |  -stations  |  -test");
     }
 
     // The commands work with or without the '-' in front, and in any letter case,
@@ -218,5 +221,51 @@ public class Main {
     // Always two numbers after the point, so 15.4238 becomes 15.42 and 20.4 becomes 20.40
     static String km(double value) {
         return String.format("%.2f", value);
+    }
+
+    // ------------------------------------------------------------- test cases
+
+    // The fixed test cases of the project, so the results can be checked quickly.
+    static void runTests() {
+        System.out.println("FIXED TEST CASES");
+        System.out.println("Solution A: Breadth-First Search with a Queue<String>.");
+        System.out.println("Solution B: Dijkstra with a HashMap<String, Double> distance table.");
+        System.out.println("Both search the same HashMap<String, ArrayList<Edge>> graph.");
+        oneTest("1. Two stations on the same line", "S01", "S10");
+        oneTest("2. Two lines, the passenger must change", "S01", "S32");
+        oneTest("3. A long trip across the city", "S02", "S60");
+        oneTest("4. The biggest difference between the solutions", "S05", "S53");
+        oneTest("5. Another trip where the solutions differ", "S05", "S60");
+        oneTest("6. A station code that does not exist", "S01", "S99");
+    }
+
+    static void oneTest(String title, String start, String end) {
+        System.out.println();
+        System.out.println("-------------------------------------------------------");
+        System.out.println(title + "   (" + start + " to " + end + ")");
+
+        if (!g.hasCode(start) || !g.hasCode(end)) {
+            System.out.println("  Result: unknown station code, the program says so and stops.");
+            return;
+        }
+
+        ArrayList<String> bfsPath = BFSPathFinder.find(g, start, end);
+        DijkstraPathFinder.Result d = DijkstraPathFinder.find(g, start, end);
+        if (bfsPath == null || d.path == null) {
+            System.out.println("  Result: there is no route between these two stations.");
+            return;
+        }
+
+        System.out.println("  Solution A (fewest stops)      : "
+                + summary(bfsPath, pathDistance(bfsPath)));
+        System.out.println("  Solution B (shortest distance) : "
+                + summary(d.path, d.totalDistance));
+        if (samePath(bfsPath, d.path)) {
+            System.out.println("  Result: the two solutions found the same route.");
+            return;
+        }
+
+        System.out.println("  Result: the routes are different, Solution B is about "
+                + km(pathDistance(bfsPath) - d.totalDistance) + " km shorter.");
     }
 }
