@@ -2,8 +2,9 @@
 // The command line tool. Every run is one command, and then the program stops.
 // The commands are explained in README.md.
 //
-// Solution A is Breadth-First Search and it uses a queue. It searches the
-// station graph and finds the route with the fewest stops.
+// Solution A is Breadth-First Search and it uses a queue.
+// Solution B is Dijkstra's algorithm and it uses a distance table.
+// Both of them search the same station graph.
 import java.util.ArrayList;
 
 public class Main {
@@ -56,7 +57,7 @@ public class Main {
 
     // ----------------------------------------------------------------- routes
 
-    // Find the route with Solution A and print it.
+    // Find the route with both solutions and show them one after the other.
     static void showRoute(String[] args) {
         if (args.length != 3) {
             System.out.println("path needs two station codes, for example S05 and S53.");
@@ -84,8 +85,9 @@ public class Main {
         System.out.println("adjacency list of the " + g.stations.size() + " stations.");
 
         ArrayList<String> bfsPath = BFSPathFinder.find(g, start, end);
+        DijkstraPathFinder.Result d = DijkstraPathFinder.find(g, start, end);
 
-        if (bfsPath == null) {
+        if (bfsPath == null || d.path == null) {
             System.out.println();
             System.out.println("There is no route between these two stations.");
             return;
@@ -97,6 +99,15 @@ public class Main {
         System.out.println("Data structure: Queue<String> (a FIFO queue made with LinkedList)");
         printPath(bfsPath);
         System.out.println("  " + summary(bfsPath, pathDistance(bfsPath)) + ".");
+
+        System.out.println();
+        System.out.println("SOLUTION B - the shortest distance");
+        System.out.println("Algorithm: Dijkstra's algorithm");
+        System.out.println("Data structure: HashMap<String, Double> (the distance table)");
+        printPath(d.path);
+        System.out.println("  " + summary(d.path, d.totalDistance) + ".");
+
+        compare(bfsPath, pathDistance(bfsPath), d.path, d.totalDistance);
     }
 
     // Print the route as a numbered list, one station on every line.
@@ -123,6 +134,24 @@ public class Main {
             return "1 stop";
         }
         return stops + " stops";
+    }
+
+    // Say in normal words how the two routes are different.
+    static void compare(ArrayList<String> bfsPath, double bfsKm,
+                        ArrayList<String> dijPath, double dijKm) {
+        System.out.println();
+        System.out.println("COMPARISON");
+        System.out.println("  Solution A (fewest stops)      : " + summary(bfsPath, bfsKm));
+        System.out.println("  Solution B (shortest distance) : " + summary(dijPath, dijKm));
+
+        if (samePath(bfsPath, dijPath)) {
+            System.out.println("  The two solutions found the same route.");
+        } else {
+            System.out.println("  Solution B has "
+                    + stopsText(dijPath.size() - bfsPath.size())
+                    + " more, but it is about " + km(bfsKm - dijKm)
+                    + " km shorter.");
+        }
     }
 
     // ---------------------------------------------------------------- helpers
@@ -156,6 +185,19 @@ public class Main {
             codes.set(small, temp);
         }
         return codes;
+    }
+
+    // True if the two routes pass the same stations in the same order.
+    static boolean samePath(ArrayList<String> a, ArrayList<String> b) {
+        if (a.size() != b.size()) {
+            return false;
+        }
+        for (int i = 0; i < a.size(); i++) {
+            if (!a.get(i).equals(b.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // Add up the distance of every connection on the route.
