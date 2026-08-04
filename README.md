@@ -3,22 +3,22 @@
 A Java program that finds a route between two Riyadh Metro stations. It finds the route in
 two ways and compares them.
 
-Solution A is Breadth-First Search. It uses a Queue and it finds the route with the fewest
-stops.
+## Data structures and algorithms
 
-Solution B is Dijkstra's algorithm. It uses a HashMap distance table and it finds the route
-with the shortest distance in km.
-
-Both of them search the same graph, which holds the 83 stations of the 6 metro lines and
-the connections between them.
+- **The graph** - a `HashMap` from a station code to the list of its neighbours (an adjacency
+  list). It holds the 83 stations of the 6 lines, and both solutions search it.
+- **Solution A** - Breadth-First Search, working data structure a `Queue` (FIFO). It finds
+  the route with the fewest stops.
+- **Solution B** - Dijkstra's algorithm, working data structure a `HashMap` distance table.
+  It finds the route with the shortest distance in km.
+- We also use `ArrayList` for the routes and the station list, and a simple selection sort to
+  put the station codes in order.
 
 ## Build it
 
 ```
 javac -d out src/*.java
 ```
-Run the program from the top folder of the
-project, because it needs to reads `data/stations.csv`.
 
 ## Run it
 
