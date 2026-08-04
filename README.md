@@ -27,6 +27,8 @@ Both of them search the same graph, which holds the 83 stations of the 6 metro l
 javac -d out src/*.java
 ```
 
+Run the program from the top folder of the project, because it reads `data/stations.csv`.
+
 ## Run it
 
 Copy any line below and run it.
@@ -114,6 +116,23 @@ One more stop saves about 23 km. This is the result we use in the report.
 
 Between two stations on the same line, like S01 and S10, there is only one way to go, so
 both solutions give the same route.
+
+## Testing
+
+We use nine fixed test cases so we can check the program the same way every time:
+
+```
+java -cp out Main -test
+```
+
+Cases 1 to 3 are trips where both solutions must find the same route: two stations on one
+line, a trip where the passenger changes line, and a long trip across the city. Cases 4 to 8
+are trips where they must find different routes, for example S08 to S54, where both give 16
+stops but Solution A is 32.52 km and Solution B is 16.34 km. Case 9 is a station code that
+does not exist, and the program must say so and not crash.
+
+We also tried small letters for the codes, `path` with a station missing, and the same
+station written twice. Each of them prints a short message and stops.
 
 ## The station codes
 
