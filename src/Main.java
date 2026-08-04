@@ -236,7 +236,10 @@ public class Main {
         oneTest("3. A long trip across the city", "S02", "S60");
         oneTest("4. The biggest difference between the solutions", "S05", "S53");
         oneTest("5. Another trip where the solutions differ", "S05", "S60");
-        oneTest("6. A station code that does not exist", "S01", "S99");
+        oneTest("6. The same number of stops, but one route is much shorter", "S08", "S54");
+        oneTest("7. Five stops more to save a lot of km", "S04", "S54");
+        oneTest("8. Ten stops more to save almost nothing", "S30", "S57");
+        oneTest("9. A station code that does not exist", "S01", "S99");
     }
 
     static void oneTest(String title, String start, String end) {
@@ -265,7 +268,15 @@ public class Main {
             return;
         }
 
-        System.out.println("  Result: the routes are different, Solution B is about "
-                + km(pathDistance(bfsPath) - d.totalDistance) + " km shorter.");
+        int extra = d.path.size() - bfsPath.size();
+        String stopsPart;
+        if (extra == 0) {
+            stopsPart = "with the same number of stops";
+        } else {
+            stopsPart = "with " + stopsText(extra) + " more";
+        }
+        System.out.println("  Result: the routes are different. Solution B is about "
+                + km(pathDistance(bfsPath) - d.totalDistance) + " km shorter, "
+                + stopsPart + ".");
     }
 }
