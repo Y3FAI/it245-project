@@ -1,16 +1,18 @@
 // Main.java
-// The command line tool. Every run is one command, and then the program stops.
-// The commands are explained in README.md.
+// This is the main program that runs when the user types a command.
+// It has three commands: path, stations, and test.
 //
-// Solution A is Breadth-First Search and it uses a queue.
-// Solution B is Dijkstra's algorithm and it uses a distance table.
-// Both of them search the same station graph.
+// Solution 1 is Breadth-First Search. It uses a queue.
+// Solution 2 is Dijkstra's algorithm. It uses a distance table.
+// Both search the same station graph.
 import java.util.ArrayList;
 
 public class Main {
 
-    static MetroGraph g;
+    static MetroGraph g; // the graph, shared by both solutions
 
+    // The program starts here. We build the graph and then check what the user
+    // wants to do.
     public static void main(String[] args) throws Exception {
         g = new MetroGraph();
         g.load("data/stations.csv");
@@ -37,18 +39,18 @@ public class Main {
         }
     }
 
-    // The commands, in one short line. README.md explains them.
+    // Show the commands the user can type.
     static void showUsage() {
         System.out.println("Commands:  path <from> <to>  |  -stations  |  -test");
     }
 
-    // The commands work with or without the '-' in front, and in any letter case,
-    // so both "-stations" and "stations" are accepted.
+    // Check if the user typed a command. It works with or without '-' and in
+    // any letter case, so "stations", "-stations", and "-STATIONS" all work.
     static boolean isCommand(String text, String name) {
         return text.equalsIgnoreCase(name) || text.equalsIgnoreCase("-" + name);
     }
 
-    // Print every station in code order.
+    // Print all station codes in order, with their names.
     static void showStations() {
         ArrayList<String> codes = sortedCodes();
         System.out.println("ALL " + codes.size() + " STATIONS");
@@ -60,7 +62,7 @@ public class Main {
 
     // ----------------------------------------------------------------- routes
 
-    // Find the route with both solutions and show them one after the other.
+    // Find the route from start to end using both solutions, then print them.
     static void showRoute(String[] args) {
         if (args.length != 3) {
             System.out.println("path needs two station codes, for example S05 and S53.");
@@ -87,6 +89,7 @@ public class Main {
         System.out.println("Shared data structure: the graph, a HashMap<String, ArrayList<Edge>>");
         System.out.println("adjacency list of the " + g.stations.size() + " stations.");
 
+        // run both solutions
         ArrayList<String> bfsPath = BFSPathFinder.find(g, start, end);
         DijkstraPathFinder.Result d = DijkstraPathFinder.find(g, start, end);
 
@@ -96,6 +99,7 @@ public class Main {
             return;
         }
 
+        // print Solution 1: BFS
         System.out.println();
         System.out.println("SOLUTION A - the fewest stops");
         System.out.println("Algorithm: Breadth-First Search");
@@ -103,6 +107,7 @@ public class Main {
         printPath(bfsPath);
         System.out.println("  " + summary(bfsPath, pathDistance(bfsPath)) + ".");
 
+        // print Solution 2: Dijkstra
         System.out.println();
         System.out.println("SOLUTION B - the shortest distance");
         System.out.println("Algorithm: Dijkstra's algorithm");
@@ -110,28 +115,29 @@ public class Main {
         printPath(d.path);
         System.out.println("  " + summary(d.path, d.totalDistance) + ".");
 
+        // compare the two routes
         compare(bfsPath, pathDistance(bfsPath), d.path, d.totalDistance);
     }
 
-    // Print the route as a numbered list, one station on every line.
+    // Print the route as a numbered list.
     static void printPath(ArrayList<String> path) {
         for (int i = 0; i < path.size(); i++) {
             Station s = g.stations.get(path.get(i));
             String number = "" + (i + 1);
             if (number.length() < 2) {
-                number = " " + number;      // keep the numbers under each other
+                number = " " + number; // keep the numbers aligned
             }
             System.out.println("   " + number + ".  " + s.code + "  " + s.name);
         }
         System.out.println();
     }
 
-    // "18 stops, 17.83 km"
+    // Make a short summary like "18 stops, 17.83 km".
     static String summary(ArrayList<String> path, double distance) {
         return stopsText(path.size() - 1) + ", " + km(distance) + " km";
     }
 
-    // "1 stop" or "9 stops"
+    // Return "1 stop" or "9 stops" depending on the number.
     static String stopsText(int stops) {
         if (stops == 1) {
             return "1 stop";
@@ -139,7 +145,7 @@ public class Main {
         return stops + " stops";
     }
 
-    // Say in normal words how the two routes are different.
+    // Print the comparison between the two solutions.
     static void compare(ArrayList<String> bfsPath, double bfsKm,
                         ArrayList<String> dijPath, double dijKm) {
         System.out.println();
@@ -157,9 +163,8 @@ public class Main {
         }
     }
 
-    // ---------------------------------------------------------------- helpers
-
-    // Turn what the user wrote into a station code, or null if it is not one.
+    // Read a station code from what the user typed.
+    // Returns null if the code does not exist in the graph.
     static String readCode(String text) {
         String code = text.trim().toUpperCase();
         if (g.hasCode(code)) {
@@ -170,7 +175,7 @@ public class Main {
         return null;
     }
 
-    // The station codes in order (S01, S02, ...), with a simple selection sort.
+    // Sort the station codes alphabetically using selection sort.
     static ArrayList<String> sortedCodes() {
         ArrayList<String> codes = new ArrayList<String>();
         for (String code : g.stations.keySet()) {
@@ -190,7 +195,7 @@ public class Main {
         return codes;
     }
 
-    // True if the two routes pass the same stations in the same order.
+    // Check if two routes are exactly the same (same stations in same order).
     static boolean samePath(ArrayList<String> a, ArrayList<String> b) {
         if (a.size() != b.size()) {
             return false;
@@ -203,7 +208,7 @@ public class Main {
         return true;
     }
 
-    // Add up the distance of every connection on the route.
+    // Add up the distance of each connection on the route.
     static double pathDistance(ArrayList<String> path) {
         double total = 0;
         for (int i = 0; i + 1 < path.size(); i++) {
@@ -218,14 +223,15 @@ public class Main {
         return total;
     }
 
-    // Always two numbers after the point, so 15.4238 becomes 15.42 and 20.4 becomes 20.40
+    // Format a number to always show two decimal places.
+    // 15.4238 becomes 15.42, 20.4 becomes 20.40.
     static String km(double value) {
         return String.format("%.2f", value);
     }
 
     // ------------------------------------------------------------- test cases
 
-    // The fixed test cases of the project, so the results can be checked quickly.
+    // Run all nine test cases so we can check the program quickly.
     static void runTests() {
         System.out.println("FIXED TEST CASES");
         System.out.println("Solution A: Breadth-First Search with a Queue<String>.");
@@ -242,6 +248,7 @@ public class Main {
         oneTest("9. A station code that does not exist", "S01", "S99");
     }
 
+    // Run one test case and print the result.
     static void oneTest(String title, String start, String end) {
         System.out.println();
         System.out.println("-------------------------------------------------------");
