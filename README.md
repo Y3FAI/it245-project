@@ -21,6 +21,10 @@ Both of them search the same graph, which holds the 83 stations of the 6 metro l
 - We also use `ArrayList` for the routes and the station list, and a simple selection sort to
   put the station codes in order.
 
+## Requirements
+
+- **JDK 17 or later** (tested on JDK 26)
+
 ## Build it
 
 ```
