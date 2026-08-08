@@ -25,66 +25,25 @@ Both of them search the same graph, which holds the 83 stations of the 6 metro l
 
 - **JDK 17 or later** (tested on JDK 26)
 
-## Build it
+## Build and run
+
+Run the commands from the top folder of the project because the program reads
+`data/stations.csv`.
 
 ```
 javac -d out src/*.java
-```
-
-Run the program from the top folder of the project, because it reads `data/stations.csv`.
-
-## Run it
-
-Copy any line below and run it.
-
-King Fahad District to Railway. This is the trip where the two solutions are the most
-different:
-
-```
 java -cp out Main path S05 S53
 ```
 
-Another trip where the answers are different:
+The available commands are:
 
-```
-java -cp out Main path S05 S60
-```
-
-A trip on one line, where both answers are the same:
-
-```
-java -cp out Main path S01 S10
-```
-
-A trip where the two routes have the same number of stops, but one of them is half the
-distance:
-
-```
-java -cp out Main path S08 S54
-```
-
-A trip where the shortest distance costs ten stops more and saves almost nothing:
-
-```
-java -cp out Main path S30 S57
-```
-
-The nine test cases of the project:
-
-```
-java -cp out Main -test
-```
-
-The list of all the stations and their codes:
-
-```
-java -cp out Main -stations
-```
+- `path <from> <to>` to find and compare a route using two station codes.
+- `-test` to run the nine test cases.
+- `-stations` to show all station names and codes.
 
 ## What it prints
 
 ```
-$ java -cp out Main path S05 S53
 ROUTE FROM  S05  King Fahad District
         TO  S53  Railway
 Shared data structure: the graph, a HashMap<String, ArrayList<Edge>>
@@ -120,26 +79,6 @@ One more stop saves about 23 km. This is the result we use in the report.
 
 Between two stations on the same line, like S01 and S10, there is only one way to go, so
 both solutions give the same route.
-
-## Testing
-
-The program has nine test cases. We run them all with one command:
-
-```
-java -cp out Main -test
-```
-
-Some of them are trips where both solutions find the same route, and some are trips where
-they find different routes. The last one is a station code that does not exist, to check
-that the program does not stop with an error.
-
-## The station codes
-
-A station is written as its code, like `S05`. To see all the codes:
-
-```
-java -cp out Main -stations
-```
 
 ## The files
 
